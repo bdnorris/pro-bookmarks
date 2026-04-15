@@ -1,12 +1,11 @@
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useCategoriesStore } from '../stores/categories'
-import { useTagsStore } from '../stores/tags'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
-import AutoComplete from 'primevue/autocomplete'
+import InputChips from 'primevue/inputchips'
 import Dialog from 'primevue/dialog'
 
 const props = defineProps({
@@ -17,7 +16,6 @@ const props = defineProps({
 const emit = defineEmits(['update:visible', 'saved'])
 
 const categoriesStore = useCategoriesStore()
-const tagsStore = useTagsStore()
 
 // Form fields
 const form = ref({
@@ -28,8 +26,6 @@ const form = ref({
   tagNames: [],
 })
 
-const tagInput = ref('')
-const tagSuggestions = ref([])
 const saving = ref(false)
 
 // Flat list of categories for the Select component
@@ -60,16 +56,8 @@ watch(
     } else {
       form.value = { url: '', title: '', description: '', category_id: null, tagNames: [] }
     }
-    tagInput.value = ''
   }
 )
-
-function searchTags(event) {
-  const q = event.query.toLowerCase()
-  tagSuggestions.value = tagsStore.tags
-    .map(t => t.name)
-    .filter(n => n.includes(q) && !form.value.tagNames.includes(n))
-}
 
 async function tryFetchTitle() {
   if (!form.value.url || form.value.title) return
@@ -151,16 +139,14 @@ async function save() {
       <!-- Tags -->
       <div>
         <label class="text-muted" style="display:block;margin-bottom:0.3rem">Tags</label>
-        <AutoComplete
+        <InputChips
           v-model="form.tagNames"
-          :suggestions="tagSuggestions"
-          @complete="searchTags"
-          multiple
-          placeholder="Add tags…"
+          placeholder="Type a tag, press Enter"
           style="width: 100%"
+          :add-on-blur="true"
         />
         <div class="text-muted" style="margin-top: 0.25rem; font-size: 0.75rem">
-          Type and press Enter. New tags are created automatically.
+          Type a tag and press Enter. New tags are created automatically.
         </div>
       </div>
     </div>
