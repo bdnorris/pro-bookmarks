@@ -1,0 +1,310 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--p-font-family, system-ui, sans-serif);
+  background-color: var(--p-surface-ground);
+  color: var(--p-text-color);
+}
+
+/* ── Layout ────────────────────────────────── */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--p-content-border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--p-surface-card);
+}
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* ── Sidebar ───────────────────────────────── */
+.sidebar-header {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.sidebar-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  padding: 0.75rem 0;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  color: var(--p-text-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.nav-item:hover {
+  background: var(--p-surface-hover);
+}
+
+.nav-item.router-link-active {
+  background: var(--p-primary-50);
+  color: var(--p-primary-color);
+  font-weight: 600;
+}
+
+.nav-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--p-text-muted-color);
+  padding: 0.75rem 1rem 0.25rem;
+}
+
+/* ── Page headers ──────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ── Bookmark cards ────────────────────────── */
+.bookmark-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.bookmark-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bookmark-card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bookmark-card-url {
+  font-size: 0.78rem;
+  color: var(--p-text-muted-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bookmark-card-desc {
+  font-size: 0.83rem;
+  color: var(--p-text-muted-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.bookmark-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color);
+}
+
+.bookmark-card-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--p-content-border-color);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.category-crumb {
+  font-size: 0.75rem;
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ── Review queue ──────────────────────────── */
+.review-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.review-card {
+  margin-top: 1.5rem;
+}
+
+.review-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.review-actions .p-button {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ── Stats cards ───────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.25rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--p-primary-color);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color);
+  margin-top: 0.3rem;
+}
+
+/* ── Category tree ─────────────────────────── */
+.category-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.category-parent-row {
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.category-parent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  background: var(--p-surface-section);
+  cursor: pointer;
+}
+
+.category-parent-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.category-children {
+  padding: 0.25rem 0;
+}
+
+.category-child-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem 0.4rem 1.75rem;
+}
+
+.category-child-name {
+  font-size: 0.85rem;
+}
+
+.category-actions {
+  display: flex;
+  gap: 0.2rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.category-parent-header:hover .category-actions,
+.category-child-row:hover .category-actions {
+  opacity: 1;
+}
+
+/* ── Utilities ─────────────────────────────── */
+.flex-center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.text-muted {
+  color: var(--p-text-muted-color);
+  font-size: 0.82rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: var(--p-text-muted-color);
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
