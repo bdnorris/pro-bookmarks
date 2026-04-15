@@ -46,11 +46,39 @@ CREATE INDEX idx_bm_categories_parent      ON bookmark_categories(parent_id);
 
 -- ============================================================
 -- Row Level Security (RLS)
--- This is a no-auth single-user app. RLS is disabled so the
--- anon key can read/write freely. If you later add auth, enable
--- RLS and add user-scoped policies.
+-- Only authenticated users may read or write any row.
+-- This is a single-user app so we don't scope rows per user —
+-- any valid Supabase session passes the check.
 -- ============================================================
-ALTER TABLE bookmark_categories  DISABLE ROW LEVEL SECURITY;
-ALTER TABLE bookmark_tags        DISABLE ROW LEVEL SECURITY;
-ALTER TABLE bookmark_bookmarks   DISABLE ROW LEVEL SECURITY;
-ALTER TABLE bookmark_tag_links   DISABLE ROW LEVEL SECURITY;
+ALTER TABLE bookmark_categories  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookmark_tags        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookmark_bookmarks   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookmark_tag_links   ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "auth_all" ON bookmark_categories
+  FOR ALL USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "auth_all" ON bookmark_tags
+  FOR ALL USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "auth_all" ON bookmark_bookmarks
+  FOR ALL USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "auth_all" ON bookmark_tag_links
+  FOR ALL USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+-- ============================================================
+-- First-time setup: create your account
+-- Run this once in the Supabase Auth dashboard (Authentication
+-- → Users → Invite user), or use the SQL below to set a
+-- password directly (replace the placeholder values):
+--
+--   SELECT auth.create_user(
+--     email    := 'you@example.com',
+--     password := 'your-secure-password'
+--   );
+-- ============================================================
