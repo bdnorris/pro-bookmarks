@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useBookmarksStore } from '../stores/bookmarks'
 import { useCategoriesStore } from '../stores/categories'
 import { useTagsStore } from '../stores/tags'
@@ -18,11 +19,20 @@ const props = defineProps({
   openFormWith: { type: Object, default: null }, // pre-populated bookmark (edit mode trigger from parent)
 })
 
+const route = useRoute()
 const bookmarksStore = useBookmarksStore()
 const categoriesStore = useCategoriesStore()
 const tagsStore = useTagsStore()
 const toast = useToast()
 const confirm = useConfirm()
+
+// Seed category filter from ?category= query param (set by Categories page links)
+onMounted(() => {
+  if (route.query.category) selectedCategoryId.value = route.query.category
+})
+watch(() => route.query.category, (id) => {
+  selectedCategoryId.value = id ?? null
+})
 
 // Form state
 const formVisible = ref(false)

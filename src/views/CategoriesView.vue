@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useCategoriesStore } from '../stores/categories'
 import { useBookmarksStore } from '../stores/bookmarks'
 import { useToast } from 'primevue/usetoast'
@@ -130,11 +131,15 @@ function confirmDelete(cat) {
       >
         <!-- Parent header -->
         <div class="category-parent-header">
-          <div class="category-parent-name">
+          <RouterLink
+            :to="{ path: '/bookmarks', query: { category: parent.id } }"
+            class="category-parent-name"
+            style="text-decoration: none; color: inherit;"
+          >
             <i class="pi pi-folder" style="color:var(--p-primary-color); font-size:0.85rem" />
             {{ parent.name }}
             <span class="text-muted">({{ bookmarkCountFor(parent.id) + parent.children.reduce((s, c) => s + bookmarkCountFor(c.id), 0) }})</span>
-          </div>
+          </RouterLink>
           <div class="category-actions flex-center">
             <Button
               icon="pi pi-plus"
@@ -164,11 +169,15 @@ function confirmDelete(cat) {
             :key="child.id"
             class="category-child-row"
           >
-            <div class="category-child-name flex-center">
+            <RouterLink
+              :to="{ path: '/bookmarks', query: { category: child.id } }"
+              class="category-child-name flex-center"
+              style="text-decoration: none; color: inherit;"
+            >
               <i class="pi pi-folder-open" style="font-size:0.75rem; color:var(--p-text-muted-color)" />
               {{ child.name }}
               <span class="text-muted">({{ bookmarkCountFor(child.id) }})</span>
-            </div>
+            </RouterLink>
             <div class="category-actions flex-center">
               <Button
                 icon="pi pi-pencil"
