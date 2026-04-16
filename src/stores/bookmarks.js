@@ -59,10 +59,10 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
     loading.value = false
   }
 
-  async function addBookmark({ url, title, description, category_id, tagNames }) {
+  async function addBookmark({ url, title, description, category_id, tagNames, og_image }) {
     const { data: bm, error: bErr } = await supabase
       .from('bookmark_bookmarks')
-      .insert({ url, title, description: description || null, category_id: category_id || null })
+      .insert({ url, title, description: description || null, category_id: category_id || null, og_image: og_image || null })
       .select('*, category:bookmark_categories(id, name, parent_id)')
       .single()
     if (bErr) throw new Error(bErr.message)
@@ -81,10 +81,10 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
     return full
   }
 
-  async function updateBookmark(id, { url, title, description, category_id, tagNames }) {
+  async function updateBookmark(id, { url, title, description, category_id, tagNames, og_image }) {
     const { data: bm, error: bErr } = await supabase
       .from('bookmark_bookmarks')
-      .update({ url, title, description: description || null, category_id: category_id || null })
+      .update({ url, title, description: description || null, category_id: category_id || null, og_image: og_image || null })
       .eq('id', id)
       .select('*, category:bookmark_categories(id, name, parent_id)')
       .single()

@@ -6,6 +6,8 @@ import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
 import InputChips from 'primevue/inputchips'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 import Dialog from 'primevue/dialog'
 
 const props = defineProps({
@@ -17,16 +19,18 @@ const emit = defineEmits(['update:visible', 'saved'])
 
 const categoriesStore = useCategoriesStore()
 
-// Form fields
 const form = ref({
   url: '',
   title: '',
   description: '',
   category_id: null,
   tagNames: [],
+  og_image: '',
 })
 
 const saving = ref(false)
+const fetchingMeta = ref(false)
+const ogImagePreview = ref('')
 
 // Flat list of categories for the Select component
 const categoryOptions = computed(() => {
@@ -40,7 +44,7 @@ const categoryOptions = computed(() => {
   return opts
 })
 
-// Reset form when dialog opens/bookmark changes
+// Reset form when dialog opens or bookmark changes
 watch(
   () => [props.visible, props.bookmark],
   ([visible]) => {
@@ -52,20 +56,42 @@ watch(
         description: props.bookmark.description ?? '',
         category_id: props.bookmark.category_id ?? null,
         tagNames: props.bookmark.tags?.map(t => t.name) ?? [],
+        og_image: props.bookmark.og_image ?? '',
       }
+      ogImagePreview.value = props.bookmark.og_image ?? ''
     } else {
-      form.value = { url: '', title: '', description: '', category_id: null, tagNames: [] }
+      form.value = { url: '', title: '', description: '', category_id: null, tagNames: [], og_image: '' }
+      ogImagePreview.value = ''
     }
   }
 )
 
-async function tryFetchTitle() {
-  if (!form.value.url || form.value.title) return
+async function fetchMeta() {
+  if (!form.value.url) return
+  // Bail early if the URL isn't parseable yet
+  try { new URL(form.value.url) } catch { return }
+
+  fetchingMeta.value = true
+  ogImagePreview.value = ''
+
   try {
-    const url = new URL(form.value.url)
-    form.value.title = url.hostname.replace(/^www\./, '')
+    const res = await fetch(
+      `/.netlify/functions/fetch-meta?url=${encodeURIComponent(form.value.url)}`
+    )
+    if (!res.ok) return
+    const meta = await res.json()
+
+    // Only auto-fill fields that are currently blank
+    if (meta.title && !form.value.title)             form.value.title = meta.title
+    if (meta.description && !form.value.description) form.value.description = meta.description
+    if (meta.image) {
+      form.value.og_image = meta.image
+      ogImagePreview.value = meta.image
+    }
   } catch {
-    // ignore invalid url
+    // Silent failure — user can fill fields manually
+  } finally {
+    fetchingMeta.value = false
   }
 }
 
@@ -94,11 +120,27 @@ async function save() {
       <!-- URL -->
       <div>
         <label class="text-muted" style="display:block;margin-bottom:0.3rem">URL *</label>
-        <InputText
-          v-model="form.url"
-          placeholder="https://..."
-          style="width: 100%"
-          @blur="tryFetchTitle"
+        <IconField style="width: 100%">
+          <InputIcon v-if="fetchingMeta" class="pi pi-spin pi-spinner" />
+          <InputText
+            v-model="form.url"
+            placeholder="https://..."
+            style="width: 100%"
+            @blur="fetchMeta"
+          />
+        </IconField>
+      </div>
+
+      <!-- OG image preview (appears after successful meta fetch) -->
+      <div
+        v-if="ogImagePreview"
+        style="border-radius: 6px; overflow: hidden; border: 1px solid var(--p-content-border-color);"
+      >
+        <img
+          :src="ogImagePreview"
+          :alt="form.title || 'Page preview'"
+          style="width: 100%; max-height: 160px; object-fit: cover; display: block;"
+          @error="ogImagePreview = ''; form.og_image = ''"
         />
       </div>
 

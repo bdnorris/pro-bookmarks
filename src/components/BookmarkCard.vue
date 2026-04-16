@@ -43,6 +43,19 @@ function displayHost(url) {
 
 <template>
   <div class="bookmark-card p-card p-component" style="padding: 1rem; border-radius: 8px; border: 1px solid var(--p-content-border-color); background: var(--p-surface-card);">
+    <!-- OG image banner -->
+    <div
+      v-if="bookmark.og_image"
+      style="margin: -1rem -1rem 0.75rem; border-radius: 7px 7px 0 0; overflow: hidden;"
+    >
+      <img
+        :src="bookmark.og_image"
+        :alt="bookmark.title"
+        style="width: 100%; height: 140px; object-fit: cover; display: block;"
+        @error="$event.target.style.display = 'none'"
+      />
+    </div>
+
     <!-- Title row -->
     <div class="flex-center" style="margin-bottom: 0.25rem">
       <button

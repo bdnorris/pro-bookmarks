@@ -72,6 +72,12 @@ CREATE POLICY "auth_all" ON bookmark_tag_links
   WITH CHECK (auth.uid() IS NOT NULL);
 
 -- ============================================================
+-- Migration: OG image support
+-- Run once in Supabase Dashboard → SQL Editor
+-- ============================================================
+ALTER TABLE bookmark_bookmarks ADD COLUMN IF NOT EXISTS og_image TEXT;
+
+-- ============================================================
 -- First-time setup: create your account
 -- Run this once in the Supabase Auth dashboard (Authentication
 -- → Users → Invite user), or use the SQL below to set a
