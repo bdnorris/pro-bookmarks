@@ -35,6 +35,23 @@ export const useTagsStore = defineStore('tags', () => {
     return data
   }
 
+  async function renameTag(id, newName) {
+    const normalized = newName.trim().toLowerCase()
+    const { data, error } = await supabase
+      .from('bookmark_tags')
+      .update({ name: normalized })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw new Error(error.message)
+    const tag = tags.value.find(t => t.id === id)
+    if (tag) {
+      tag.name = data.name
+      tags.value.sort((a, b) => a.name.localeCompare(b.name))
+    }
+    return data
+  }
+
   async function deleteTag(id) {
     const { error } = await supabase.from('bookmark_tags').delete().eq('id', id)
     if (error) throw new Error(error.message)
@@ -55,5 +72,5 @@ export const useTagsStore = defineStore('tags', () => {
     tags.value = tags.value.filter(t => !orphanIds.includes(t.id))
   }
 
-  return { tags, loading, fetchTags, getOrCreate, deleteTag, pruneOrphanTags }
+  return { tags, loading, fetchTags, getOrCreate, renameTag, deleteTag, pruneOrphanTags }
 })

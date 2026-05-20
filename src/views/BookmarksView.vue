@@ -29,9 +29,13 @@ const confirm = useConfirm()
 // Seed category filter from ?category= query param (set by Categories page links)
 onMounted(() => {
   if (route.query.category) selectedCategoryId.value = route.query.category
+  if (route.query.tag) selectedTagIds.value = [route.query.tag]
 })
 watch(() => route.query.category, (id) => {
   selectedCategoryId.value = id ?? null
+})
+watch(() => route.query.tag, (id) => {
+  selectedTagIds.value = id ? [id] : []
 })
 
 // Form state

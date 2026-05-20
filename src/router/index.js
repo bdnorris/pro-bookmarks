@@ -5,6 +5,7 @@ import BookmarksView from '../views/BookmarksView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
 import ReviewView from '../views/ReviewView.vue'
 import LoginView from '../views/LoginView.vue'
+import TagsView from '../views/TagsView.vue'
 
 const routes = [
   { path: '/login',     name: 'login',      component: LoginView, meta: { public: true } },
@@ -12,6 +13,7 @@ const routes = [
   { path: '/bookmarks', name: 'bookmarks',  component: BookmarksView },
   { path: '/categories',name: 'categories', component: CategoriesView },
   { path: '/review',    name: 'review',     component: ReviewView },
+  { path: '/tags',      name: 'tags',       component: TagsView },
 ]
 
 export const router = createRouter({

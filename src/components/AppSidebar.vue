@@ -20,6 +20,7 @@ const navItems = [
   { to: '/',            icon: 'pi pi-home',        label: 'Dashboard' },
   { to: '/bookmarks',  icon: 'pi pi-bookmark',    label: 'Bookmarks' },
   { to: '/categories', icon: 'pi pi-folder',      label: 'Categories' },
+  { to: '/tags',       icon: 'pi pi-tag',         label: 'Tags' },
   { to: '/review',     icon: 'pi pi-replay',      label: 'Review Queue' },
 ]
 </script>
