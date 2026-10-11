@@ -11,13 +11,13 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
   const tagsStore = useTagsStore()
 
   // Computed: bookmarks ordered for the review queue
-  // Never-reviewed first, then oldest reviewed first
+  // Never-reviewed first, then oldest added to newest added
   const reviewQueue = computed(() =>
     [...bookmarks.value].sort((a, b) => {
-      if (!a.last_reviewed_at && !b.last_reviewed_at) return 0
-      if (!a.last_reviewed_at) return -1
-      if (!b.last_reviewed_at) return 1
-      return new Date(a.last_reviewed_at) - new Date(b.last_reviewed_at)
+      const aUnreviewed = !a.last_reviewed_at
+      const bUnreviewed = !b.last_reviewed_at
+      if (aUnreviewed !== bUnreviewed) return aUnreviewed ? -1 : 1
+      return new Date(a.created_at) - new Date(b.created_at)
     })
   )
 

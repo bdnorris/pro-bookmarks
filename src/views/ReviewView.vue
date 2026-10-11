@@ -44,7 +44,7 @@ const reviewedLabel = computed(() => {
 })
 
 function startSession() {
-  // Take a snapshot of IDs in review order (never-reviewed first, then oldest first)
+  // Take a snapshot of IDs in review order (never-reviewed first, oldest added to newest)
   queue.value = bookmarksStore.reviewQueue.map(b => b.id)
   currentIndex.value = 0
   keptCount.value = 0
@@ -127,7 +127,7 @@ function formatDate(iso) {
         <p class="text-muted" style="margin:0 0 1.5rem">
           The review queue walks you through your bookmarks one at a time —
           keep what's useful, remove what's not.
-          Never-reviewed items come first.
+          Never-reviewed items come first, oldest to newest.
         </p>
 
         <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:1.5rem">
